@@ -54,6 +54,9 @@
             padding: 1.5rem 2rem;
             margin-bottom: 1rem;
             border-left: 4px solid #3b82f6;
+        }
+
+        .post-new {
             animation: slideIn 0.3s ease-out;
         }
 
@@ -147,27 +150,58 @@
     </div>
 
     <script>
+        var knownIds = new Set();
+
         function timeAgo(dateString) {
-            const now = new Date();
-            const date = new Date(dateString);
-            const seconds = Math.floor((now - date) / 1000);
+            var now = new Date();
+            var date = new Date(dateString);
+            var seconds = Math.floor((now - date) / 1000);
 
             if (seconds < 10) return "à l'instant";
             if (seconds < 60) return "il y a " + seconds + " sec";
 
-            const minutes = Math.floor(seconds / 60);
+            var minutes = Math.floor(seconds / 60);
             if (minutes < 60) return "il y a " + minutes + " min";
 
-            const hours = Math.floor(minutes / 60);
+            var hours = Math.floor(minutes / 60);
             if (hours < 24) return "il y a " + hours + "h";
 
-            const days = Math.floor(hours / 24);
+            var days = Math.floor(hours / 24);
             return "il y a " + days + "j";
         }
 
+        function escapeHtml(text) {
+            var div = document.createElement('div');
+            div.appendChild(document.createTextNode(text));
+            return div.innerHTML;
+        }
+
+        function createPostElement(post, animate) {
+            var div = document.createElement('div');
+            div.className = 'post' + (animate ? ' post-new' : '');
+            div.dataset.id = post.id;
+            div.dataset.createdAt = post.created_at;
+            div.innerHTML =
+                '<div class="post-header">' +
+                    '<span class="post-author">@' + escapeHtml(post.author) + '</span>' +
+                    '<span class="post-time">' + timeAgo(post.created_at) + '</span>' +
+                '</div>' +
+                '<div class="post-content">' + escapeHtml(post.content) + '</div>';
+            return div;
+        }
+
+        function updateTimeLabels() {
+            document.querySelectorAll('.post').forEach(function(el) {
+                var createdAt = el.dataset.createdAt;
+                if (createdAt) {
+                    el.querySelector('.post-time').textContent = timeAgo(createdAt);
+                }
+            });
+        }
+
         function renderFeed(posts) {
-            const feed = document.getElementById('feed');
-            const postCount = document.getElementById('post-count');
+            var feed = document.getElementById('feed');
+            var postCount = document.getElementById('post-count');
 
             postCount.textContent = posts.length + ' post' + (posts.length !== 1 ? 's' : '');
 
@@ -176,21 +210,32 @@
                 return;
             }
 
-            feed.innerHTML = posts.map(function(post) {
-                return '<div class="post">' +
-                    '<div class="post-header">' +
-                        '<span class="post-author">@' + escapeHtml(post.author) + '</span>' +
-                        '<span class="post-time">' + timeAgo(post.created_at) + '</span>' +
-                    '</div>' +
-                    '<div class="post-content">' + escapeHtml(post.content) + '</div>' +
-                '</div>';
-            }).join('');
-        }
+            var newPosts = posts.filter(function(post) {
+                return !knownIds.has(post.id);
+            });
 
-        function escapeHtml(text) {
-            var div = document.createElement('div');
-            div.appendChild(document.createTextNode(text));
-            return div.innerHTML;
+            if (newPosts.length === 0) {
+                updateTimeLabels();
+                return;
+            }
+
+            // Premier chargement : tout afficher sans animation
+            if (knownIds.size === 0) {
+                feed.innerHTML = '';
+                posts.forEach(function(post) {
+                    knownIds.add(post.id);
+                    feed.appendChild(createPostElement(post, false));
+                });
+                return;
+            }
+
+            // Insérer les nouveaux posts en haut avec animation
+            newPosts.reverse().forEach(function(post) {
+                knownIds.add(post.id);
+                feed.insertBefore(createPostElement(post, true), feed.firstChild);
+            });
+
+            updateTimeLabels();
         }
 
         function fetchFeed() {
