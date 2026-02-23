@@ -43,9 +43,8 @@
         }
 
         .feed {
-            max-width: 800px;
-            margin: 2rem auto;
-            padding: 0 1rem;
+            flex: 1;
+            min-width: 0;
         }
 
         .post {
@@ -96,6 +95,67 @@
             word-break: break-word;
         }
 
+        .main-content {
+            display: flex;
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+            gap: 1.5rem;
+        }
+
+        .players-panel {
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .players-card {
+            background: #1e293b;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            position: sticky;
+            top: 6rem;
+        }
+
+        .players-card h2 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .players-list {
+            list-style: none;
+        }
+
+        .players-list li {
+            padding: 0.5rem 0;
+            font-size: 1rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .players-list li::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .player-count {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.75rem;
+        }
+
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
@@ -140,8 +200,26 @@
         <div class="subtitle">Réseau social de la salle</div>
     </div>
 
-    <div class="feed" id="feed">
-        <div class="empty-state">En attente des premiers posts...</div>
+    <div class="main-content">
+        <div class="feed" id="feed">
+            <div class="empty-state">En attente des premiers posts...</div>
+        </div>
+
+        <div class="players-panel">
+            <div class="players-card">
+                <h2>Inscrits</h2>
+                <div class="player-count">{{ $players->count() }} membre{{ $players->count() !== 1 ? 's' : '' }}</div>
+                @if($players->isEmpty())
+                    <p style="color: #64748b; font-size: 0.95rem;">Aucun inscrit pour le moment.</p>
+                @else
+                    <ul class="players-list">
+                        @foreach($players as $pseudo)
+                            <li>{{ $pseudo }}</li>
+                        @endforeach
+                    </ul>
+                @endif
+            </div>
+        </div>
     </div>
 
     <div class="status-bar">
