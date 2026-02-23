@@ -19,6 +19,16 @@ class PlayerFactory extends Factory
             'pseudo' => fake()->unique()->userName(),
             'port' => fake()->unique()->numberBetween(8000, 8099),
             'token' => Str::random(64),
+            'bio' => null,
+            'avatar_url' => null,
         ];
+    }
+
+    public function withProfile(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'bio' => fake()->sentence(),
+            'avatar_url' => fake()->imageUrl(),
+        ]);
     }
 }

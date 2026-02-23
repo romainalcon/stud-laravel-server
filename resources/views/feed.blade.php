@@ -42,6 +42,66 @@
             margin-top: 0.25rem;
         }
 
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tab-btn {
+            background: #334155;
+            color: #94a3b8;
+            border: none;
+            padding: 0.5rem 1.25rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            background: #475569;
+            color: #e2e8f0;
+        }
+
+        .tab-btn.active {
+            background: #3b82f6;
+            color: #fff;
+        }
+
+        .tag-filters {
+            display: flex;
+            justify-content: center;
+            gap: 0.4rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .tag-filter-btn {
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            opacity: 0.6;
+        }
+
+        .tag-filter-btn:hover, .tag-filter-btn.active {
+            opacity: 1;
+        }
+
+        .tag-filter-btn[data-tag="all"] { background: #475569; color: #e2e8f0; }
+        .tag-filter-btn[data-tag="humeur"] { background: #3b82f6; color: #fff; }
+        .tag-filter-btn[data-tag="question"] { background: #f97316; color: #fff; }
+        .tag-filter-btn[data-tag="annonce"] { background: #ef4444; color: #fff; }
+        .tag-filter-btn[data-tag="blague"] { background: #22c55e; color: #fff; }
+        .tag-filter-btn[data-tag="code"] { background: #8b5cf6; color: #fff; }
+        .tag-filter-btn[data-tag="random"] { background: #6b7280; color: #fff; }
+
         .feed {
             flex: 1;
             min-width: 0;
@@ -77,11 +137,33 @@
             margin-bottom: 0.75rem;
         }
 
+        .post-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .post-author {
             font-size: 1.4rem;
             font-weight: 700;
             color: #3b82f6;
         }
+
+        .post-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.6rem;
+            border-radius: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .tag-humeur { background: #3b82f6; color: #fff; }
+        .tag-question { background: #f97316; color: #fff; }
+        .tag-annonce { background: #ef4444; color: #fff; }
+        .tag-blague { background: #22c55e; color: #fff; }
+        .tag-code { background: #8b5cf6; color: #fff; }
+        .tag-random { background: #6b7280; color: #fff; }
 
         .post-time {
             font-size: 0.95rem;
@@ -93,6 +175,20 @@
             line-height: 1.5;
             color: #f1f5f9;
             word-break: break-word;
+        }
+
+        .post-footer {
+            display: flex;
+            gap: 1.25rem;
+            margin-top: 0.75rem;
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .post-stat {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
         .main-content {
@@ -192,17 +288,123 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.3; }
         }
+
+        /* Annuaire */
+        .annuaire-section {
+            display: none;
+        }
+
+        .annuaire-section.active {
+            display: block;
+        }
+
+        .feed-section {
+            display: block;
+        }
+
+        .feed-section.hidden {
+            display: none;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .profile-card {
+            background: #1e293b;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.75rem;
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-pseudo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #3b82f6;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-bio {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 0.75rem;
+            min-height: 1.5rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .profile-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #e2e8f0;
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>Feed Promo</h1>
         <div class="subtitle">Réseau social de la salle</div>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="feed">Feed</button>
+            <button class="tab-btn" data-tab="annuaire">Annuaire</button>
+        </div>
+        <div class="tag-filters" id="tag-filters">
+            <button class="tag-filter-btn active" data-tag="all">Tous</button>
+            <button class="tag-filter-btn" data-tag="humeur">Humeur</button>
+            <button class="tag-filter-btn" data-tag="question">Question</button>
+            <button class="tag-filter-btn" data-tag="annonce">Annonce</button>
+            <button class="tag-filter-btn" data-tag="blague">Blague</button>
+            <button class="tag-filter-btn" data-tag="code">Code</button>
+            <button class="tag-filter-btn" data-tag="random">Random</button>
+        </div>
     </div>
 
     <div class="main-content">
-        <div class="feed" id="feed">
-            <div class="empty-state">En attente des premiers posts...</div>
+        <div class="feed-section" id="feed-section">
+            <div class="feed" id="feed">
+                <div class="empty-state">En attente des premiers posts...</div>
+            </div>
+        </div>
+
+        <div class="annuaire-section" id="annuaire-section">
+            <div class="profile-grid" id="profile-grid"></div>
         </div>
 
         <div class="players-panel">
@@ -229,6 +431,8 @@
 
     <script>
         var knownIds = new Set();
+        var currentTag = 'all';
+        var currentTab = 'feed';
 
         function timeAgo(dateString) {
             var now = new Date();
@@ -259,12 +463,25 @@
             div.className = 'post' + (animate ? ' post-new' : '');
             div.dataset.id = post.id;
             div.dataset.createdAt = post.created_at;
+
+            var tagHtml = '';
+            if (post.tag) {
+                tagHtml = '<span class="post-tag tag-' + escapeHtml(post.tag) + '">' + escapeHtml(post.tag) + '</span>';
+            }
+
             div.innerHTML =
                 '<div class="post-header">' +
-                    '<span class="post-author">@' + escapeHtml(post.author) + '</span>' +
+                    '<div class="post-header-left">' +
+                        '<span class="post-author">@' + escapeHtml(post.author) + '</span>' +
+                        tagHtml +
+                    '</div>' +
                     '<span class="post-time">' + timeAgo(post.created_at) + '</span>' +
                 '</div>' +
-                '<div class="post-content">' + escapeHtml(post.content) + '</div>';
+                '<div class="post-content">' + escapeHtml(post.content) + '</div>' +
+                '<div class="post-footer">' +
+                    '<span class="post-stat">&#10084; ' + (post.likes_count || 0) + '</span>' +
+                    '<span class="post-stat">&#128172; ' + (post.comments_count || 0) + '</span>' +
+                '</div>';
             return div;
         }
 
@@ -285,6 +502,7 @@
 
             if (posts.length === 0) {
                 feed.innerHTML = '<div class="empty-state">En attente des premiers posts...</div>';
+                knownIds = new Set();
                 return;
             }
 
@@ -297,7 +515,7 @@
                 return;
             }
 
-            // Premier chargement : tout afficher sans animation
+            // Premier chargement ou changement de filtre : tout afficher sans animation
             if (knownIds.size === 0) {
                 feed.innerHTML = '';
                 posts.forEach(function(post) {
@@ -317,11 +535,91 @@
         }
 
         function fetchFeed() {
-            fetch('/api/feed')
+            var url = '/api/feed';
+            if (currentTag !== 'all') {
+                url += '?tag=' + encodeURIComponent(currentTag);
+            }
+
+            fetch(url)
                 .then(function(response) { return response.json(); })
                 .then(function(posts) { renderFeed(posts); })
                 .catch(function(error) { console.error('Erreur fetch feed:', error); });
         }
+
+        function fetchProfiles() {
+            fetch('/api/profiles')
+                .then(function(response) { return response.json(); })
+                .then(function(profiles) { renderProfiles(profiles); })
+                .catch(function(error) { console.error('Erreur fetch profiles:', error); });
+        }
+
+        function renderProfiles(profiles) {
+            var grid = document.getElementById('profile-grid');
+
+            if (profiles.length === 0) {
+                grid.innerHTML = '<div class="empty-state">Aucun profil pour le moment.</div>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            profiles.forEach(function(profile) {
+                var card = document.createElement('div');
+                card.className = 'profile-card';
+
+                var avatarContent = '';
+                if (profile.avatar_url) {
+                    avatarContent = '<img src="' + escapeHtml(profile.avatar_url) + '" alt="avatar" onerror="this.parentNode.textContent=\'' + escapeHtml(profile.pseudo).charAt(0).toUpperCase() + '\'">';
+                } else {
+                    avatarContent = escapeHtml(profile.pseudo).charAt(0).toUpperCase();
+                }
+
+                card.innerHTML =
+                    '<div class="profile-avatar">' + avatarContent + '</div>' +
+                    '<div class="profile-pseudo">@' + escapeHtml(profile.pseudo) + '</div>' +
+                    '<div class="profile-bio">' + (profile.bio ? escapeHtml(profile.bio) : 'Pas de bio') + '</div>' +
+                    '<div class="profile-stats">' +
+                        '<div class="profile-stat"><span class="profile-stat-value">' + (profile.posts_count || 0) + '</span>posts</div>' +
+                        '<div class="profile-stat"><span class="profile-stat-value">' + (profile.likes_received || 0) + '</span>likes</div>' +
+                        '<div class="profile-stat"><span class="profile-stat-value">' + (profile.followers_count || 0) + '</span>followers</div>' +
+                    '</div>';
+                grid.appendChild(card);
+            });
+        }
+
+        // Gestion des onglets
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentTab = btn.dataset.tab;
+
+                var feedSection = document.getElementById('feed-section');
+                var annuaireSection = document.getElementById('annuaire-section');
+                var tagFilters = document.getElementById('tag-filters');
+
+                if (currentTab === 'feed') {
+                    feedSection.classList.remove('hidden');
+                    annuaireSection.classList.remove('active');
+                    tagFilters.style.display = 'flex';
+                } else {
+                    feedSection.classList.add('hidden');
+                    annuaireSection.classList.add('active');
+                    tagFilters.style.display = 'none';
+                    fetchProfiles();
+                }
+            });
+        });
+
+        // Gestion des filtres par tag
+        document.querySelectorAll('.tag-filter-btn').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tag-filter-btn').forEach(function(b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                currentTag = btn.dataset.tag;
+                knownIds = new Set();
+                fetchFeed();
+            });
+        });
 
         fetchFeed();
         setInterval(fetchFeed, 5000);

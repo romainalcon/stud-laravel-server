@@ -9,7 +9,9 @@
       "Bash(php artisan make:request:*)",
       "Bash(php artisan:*)",
       "mcp__laravel-boost__search-docs",
-      "Bash(vendor/bin/pint:*)"
+      "Bash(vendor/bin/pint:*)",
+      "mcp__laravel-boost__list-routes",
+      "Bash(git add:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

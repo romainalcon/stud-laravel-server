@@ -20,12 +20,14 @@ class PostController extends Controller
 
         $post = $player->posts()->create([
             'content' => $request->validated('content'),
+            'tag' => $request->validated('tag'),
         ]);
 
         return response()->json([
             'id' => $post->id,
             'author' => $player->pseudo,
             'content' => $post->content,
+            'tag' => $post->tag,
             'created_at' => $post->created_at->toIso8601String(),
         ], 201);
     }

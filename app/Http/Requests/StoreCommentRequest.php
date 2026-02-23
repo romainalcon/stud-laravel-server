@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostRequest extends FormRequest
+class StoreCommentRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,8 +17,7 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['required', 'string', 'max:500'],
-            'tag' => ['nullable', 'string', 'in:humeur,question,annonce,blague,code,random'],
+            'content' => ['required', 'string', 'max:280'],
         ];
     }
 
@@ -29,8 +28,7 @@ class StorePostRequest extends FormRequest
     {
         return [
             'content.required' => 'Le contenu est requis.',
-            'content.max' => 'Le contenu ne peut pas dépasser 500 caractères.',
-            'tag.in' => 'Le tag doit être parmi : humeur, question, annonce, blague, code, random.',
+            'content.max' => 'Le contenu ne peut pas dépasser 280 caractères.',
         ];
     }
 }

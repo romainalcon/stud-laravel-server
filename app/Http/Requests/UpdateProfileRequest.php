@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostRequest extends FormRequest
+class UpdateProfileRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,8 +17,8 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => ['required', 'string', 'max:500'],
-            'tag' => ['nullable', 'string', 'in:humeur,question,annonce,blague,code,random'],
+            'bio' => ['nullable', 'string', 'max:280'],
+            'avatar_url' => ['nullable', 'url'],
         ];
     }
 
@@ -28,9 +28,8 @@ class StorePostRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'content.required' => 'Le contenu est requis.',
-            'content.max' => 'Le contenu ne peut pas dépasser 500 caractères.',
-            'tag.in' => 'Le tag doit être parmi : humeur, question, annonce, blague, code, random.',
+            'bio.max' => 'La bio ne peut pas dépasser 280 caractères.',
+            'avatar_url.url' => "L'URL de l'avatar doit être une URL valide.",
         ];
     }
 }

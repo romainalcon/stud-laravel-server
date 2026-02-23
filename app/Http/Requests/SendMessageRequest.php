@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StorePostRequest extends FormRequest
+class SendMessageRequest extends FormRequest
 {
     public function authorize(): bool
     {
@@ -17,8 +17,8 @@ class StorePostRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'to' => ['required', 'string', 'exists:players,pseudo'],
             'content' => ['required', 'string', 'max:500'],
-            'tag' => ['nullable', 'string', 'in:humeur,question,annonce,blague,code,random'],
         ];
     }
 
@@ -28,9 +28,10 @@ class StorePostRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'to.required' => 'Le destinataire est requis.',
+            'to.exists' => 'Joueur introuvable.',
             'content.required' => 'Le contenu est requis.',
             'content.max' => 'Le contenu ne peut pas dépasser 500 caractères.',
-            'tag.in' => 'Le tag doit être parmi : humeur, question, annonce, blague, code, random.',
         ];
     }
 }

@@ -3,23 +3,28 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Player;
 use App\Models\Post;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class FeedController extends Controller
+class PersonalFeedController extends Controller
 {
     public function __invoke(Request $request): JsonResponse
     {
+        $token = str_replace('Bearer ', '', (string) $request->header('Authorization'));
+        $player = Player::query()->where('token', $token)->first();
+
+        if (! $player) {
+            return response()->json(['message' => 'Token invalide.'], 401);
+        }
+
+        $followedIds = $player->following()->pluck('players.id');
+
         $posts = Post::query()
             ->with('player')
             ->withCount(['likes', 'comments'])
-            ->when($request->query('author'), function ($query, $author) {
-                $query->whereHas('player', fn ($q) => $q->where('pseudo', $author));
-            })
-            ->when($request->query('tag'), function ($query, $tag) {
-                $query->where('tag', $tag);
-            })
+            ->whereIn('player_id', $followedIds)
             ->latest()
             ->get()
             ->map(fn ($post) => [
