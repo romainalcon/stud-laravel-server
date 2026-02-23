@@ -375,6 +375,63 @@
             font-weight: 700;
             color: #e2e8f0;
         }
+
+        .post-stat.clickable {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .post-stat.clickable:hover {
+            color: #3b82f6;
+        }
+
+        .comments-section {
+            margin-top: 0.75rem;
+            border-top: 1px solid #334155;
+            padding-top: 0.75rem;
+            display: none;
+        }
+
+        .comments-section.open {
+            display: block;
+        }
+
+        .comment {
+            padding: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .comment + .comment {
+            border-top: 1px solid #1e293b;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: #3b82f6;
+            font-size: 0.85rem;
+        }
+
+        .comment-content {
+            color: #cbd5e1;
+            margin-top: 0.15rem;
+        }
+
+        .comment-time {
+            font-size: 0.75rem;
+            color: #64748b;
+            margin-top: 0.15rem;
+        }
+
+        .comments-empty {
+            color: #64748b;
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .comments-loading {
+            color: #64748b;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
@@ -480,8 +537,9 @@
                 '<div class="post-content">' + escapeHtml(post.content) + '</div>' +
                 '<div class="post-footer">' +
                     '<span class="post-stat">&#10084; ' + (post.likes_count || 0) + '</span>' +
-                    '<span class="post-stat">&#128172; ' + (post.comments_count || 0) + '</span>' +
-                '</div>';
+                    '<span class="post-stat clickable" onclick="toggleComments(this, ' + post.id + ')">&#128172; ' + (post.comments_count || 0) + '</span>' +
+                '</div>' +
+                '<div class="comments-section" data-post-id="' + post.id + '"></div>';
             return div;
         }
 
@@ -620,6 +678,41 @@
                 fetchFeed();
             });
         });
+
+        function toggleComments(el, postId) {
+            var section = el.closest('.post').querySelector('.comments-section');
+
+            if (section.classList.contains('open')) {
+                section.classList.remove('open');
+                return;
+            }
+
+            section.innerHTML = '<div class="comments-loading">Chargement...</div>';
+            section.classList.add('open');
+
+            fetch('/api/posts/' + postId + '/comments')
+                .then(function(response) { return response.json(); })
+                .then(function(comments) {
+                    if (comments.length === 0) {
+                        section.innerHTML = '<div class="comments-empty">Aucun commentaire.</div>';
+                        return;
+                    }
+
+                    section.innerHTML = '';
+                    comments.forEach(function(comment) {
+                        var commentDiv = document.createElement('div');
+                        commentDiv.className = 'comment';
+                        commentDiv.innerHTML =
+                            '<span class="comment-author">@' + escapeHtml(comment.author) + '</span>' +
+                            '<div class="comment-content">' + escapeHtml(comment.content) + '</div>' +
+                            '<div class="comment-time">' + timeAgo(comment.created_at) + '</div>';
+                        section.appendChild(commentDiv);
+                    });
+                })
+                .catch(function() {
+                    section.innerHTML = '<div class="comments-empty">Erreur de chargement.</div>';
+                });
+        }
 
         fetchFeed();
         setInterval(fetchFeed, 5000);
